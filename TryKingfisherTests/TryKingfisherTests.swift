@@ -8,27 +8,78 @@
 
 import XCTest
 @testable import TryKingfisher
+import Combine
+
+class MockImageHandler: ImageHandlerType {
+  var spiedDeleteURLs = [URL]()
+  var stubDeleteImage: (_ url: URL) -> AnyPublisher<Void, Never>
+  func deleteImage(_ url: URL) -> AnyPublisher<Void, Never> {
+    spiedDeleteURLs.append(url)
+    return stubDeleteImage(url)
+  }
+  var spiedImageURLs = [URL]()
+  var stubImage: (_ url: URL) -> AnyPublisher<UIImage, ImageHandlerError>
+  func image(_ url: URL) -> AnyPublisher<UIImage, ImageHandlerError> {
+    spiedImageURLs.append(url)
+    return stubImage(url)
+  }
+  
+  init(stubDeleteImage: @escaping (_ url: URL) -> AnyPublisher<Void, Never>,
+       stubImage: @escaping (_ url: URL) -> AnyPublisher<UIImage, ImageHandlerError>) {
+    self.stubDeleteImage = stubDeleteImage
+    self.stubImage = stubImage
+  }
+  
+}
 
 class TryKingfisherTests: XCTestCase {
-
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+  
+  var sut: BeardDataSource!
+  let testImage = Assets.Images.beardPlaceHolder.uiImage
+  
+  override func setUp() {
+    sut = BeardDataSource()
+    // Put setup code here. This method is called before the invocation of each test method in the class.
+  }
+  
+  override func tearDown() {
+    sut = nil
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
+  }
+  
+  func testExample() {
+    //Given
+    let imageHandler = MockImageHandler(stubDeleteImage: { (url: URL) -> AnyPublisher<Void, Never> in
+      return Just<Void>(()).eraseToAnyPublisher()
+    }) { (url: URL) -> AnyPublisher<UIImage, ImageHandlerError> in
+      return Just(self.testImage).setFailureType(to: ImageHandlerError.self).eraseToAnyPublisher()
     }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    sut = BeardDataSource()
+    sut.imageHandler = imageHandler
+    var spiedChangeEvents = PassthroughSubject<Void,Never>()
+    var spiedDidChangeCount = 0
+    let spiedDidChange = spiedChangeEvents.sink { _ in
+      spiedDidChangeCount += 1
     }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    _ = sut.didChange.subscribe(spiedChangeEvents)
+    let expect = self.expectation(description: "Finished Test")
+    
+    //When
+    Just<Void>(())
+      .delay(for: 1, scheduler: RunLoop.current)
+      .map{ _ in self.sut.onAppear() }
+      .delay(for: 1, scheduler: RunLoop.current)
+      .map { _ in self.sut.buttonPressed() }
+      .sink { _ in
+      expect.fulfill()
     }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+    
+    
+    //Then
+    waitForExpectations(timeout: 3, handler: nil)
+    XCTAssertEqual(imageHandler.spiedImageURLs.count, 2)
+    XCTAssertEqual(imageHandler.spiedDeleteURLs.count, 1)
+    XCTAssertEqual(spiedDidChangeCount, 2)
+  }
+  
 }

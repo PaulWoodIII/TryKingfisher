@@ -7,17 +7,33 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ContentView : View {
+  
+  @EnvironmentObject var ds: BeardDataSource
+  
     var body: some View {
-        Text("Hello World")
+      VStack {
+        Text(ds.viewModel.name)
+        Image(uiImage: ds.viewModel.image ?? UIImage())
+        Button("Click Me") {
+          print("Clicked")
+          self.ds.buttonPressed()
+        }
+      }
+      .onAppear{
+        self.ds.onAppear()
+      }
     }
+  
+  
 }
 
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView().environmentObject(BeardDataSource())
     }
 }
 #endif
