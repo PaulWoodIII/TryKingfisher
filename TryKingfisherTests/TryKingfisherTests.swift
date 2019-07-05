@@ -55,12 +55,10 @@ class TryKingfisherTests: XCTestCase {
       return Just(self.testImage).setFailureType(to: ImageHandlerError.self).eraseToAnyPublisher()
     }
     sut?.imageHandler = imageHandler
-    var spiedChangeEvents = PassthroughSubject<Void,Never>()
     var spiedDidChangeCount = 0
-    let spiedDidChange = spiedChangeEvents.sink { _ in
+    _ = sut?.didChange.sink { _ in
       spiedDidChangeCount += 1
     }
-    _ = sut?.didChange.subscribe(spiedChangeEvents)
     let expect = self.expectation(description: "Finished Test")
     
     //When

@@ -18,12 +18,11 @@ protocol BeardDataSourceType {
 
 class BeardDataSource: BindableObject {
   
-  
   private static let beardUrlString = "https://placebeard.it/120"
   private let beardUrl = URL(string: beardUrlString)!
   
   /// Could add @Published here
-  var viewModel: BeardViewModel
+  @Published var viewModel: BeardViewModel
   
   /// Injectable 
   var imageHandler: ImageHandlerType = ImageHandler()
@@ -50,55 +49,25 @@ class BeardDataSource: BindableObject {
     imageDownloadTask = imageHandler.image(beardUrl)
       .receive(on: RunLoop.main)
       .sink { (result: UIImage) in
-        print("Will Update")
-
         //Set current View Model attributes
-//        self.viewModel.image = result
-//        self.viewModel.name = self.names.randomElement()!
-        
-        // Set view model with a new view model
-        self.viewModel = BeardViewModel(image: result,
-                                        name: self.newName())
-        
-        self._didChange.send()
-    }
+        self.viewModel.image = result
+        self.viewModel.name = self.names.randomElement()!
+      }
   }
   
   private func deleteImageFromCache() -> AnyPublisher<Void, Never> {
     return imageHandler.deleteImage(beardUrl)
   }
   
-  /// Hide the PassthroughSubject so nefarious objects don't call `.send()` on it
-  /// really only this object should know to do that
-  private var _didChange = PassthroughSubject<Void, Never>()
-  
   /// Getter for the didChange Publisher to conform to `BindableObject`
-  var didChange: AnyPublisher<Void, Never> {
-
-    // Niave implementation was to use a subject as the publisher
-    return _didChange
-      .subscribe(on: RunLoop.main)
-//      .receive(on: RunLoop.main)
+  lazy var didChange: AnyPublisher<Void, Never> = {
+    return self.$viewModel
+      .publisher(for: \.image, \.name)
+      .throttle(for: 1, scheduler: RunLoop.main, latest: true)
+      .map{ _ in return }
+      .receive(on: RunLoop.main)
       .eraseToAnyPublisher()
-    
-    // I'd Prefer to use Combine and merged streams to trigger DidChange but
-    // that isn't working so I started to add test to find out why
-    
-    // use the viewModel itself
-//    return self.$viewModel
-//      .receive(on: RunLoop.main)
-//      .map{ _ in return ()}
-//      .assertNoFailure().eraseToAnyPublisher()
-    
-    // use the view model's attributes
-//    return $viewModel.publisher(for: \.name, \.image)
-//      .map { _ -> () in
-//        print("Did Change")
-//    }
-//      .receive(on: RunLoop.main)
-//      .eraseToAnyPublisher()
-
-  }
+  }()
   
   /// Some Names to use
   private let names: [String] = [
