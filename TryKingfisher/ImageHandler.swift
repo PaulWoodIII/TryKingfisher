@@ -11,7 +11,10 @@ import Combine
 import UIKit
 import Kingfisher
 
+/// App specific errors mapped from the Kingfisher Errors
 public enum ImageHandlerError: Error {
+  
+  /// An erroor that should be displayed to the user in some way
   public enum DisplaceableErrorReason: Error {
     case unknown
     
@@ -27,16 +30,17 @@ public enum ImageHandlerError: Error {
   
 }
 
-/// Public interface of an Image Handler
+/// Public interface of an Image Handler so objects that need this functionality don't know we have this dependency
+/// this allows the dependency to be changed at a future date without changing the code that needs images
 protocol ImageHandlerType {
   func deleteImage(_ url: URL) -> AnyPublisher<Void, Never>
   func image(_ url: URL) -> AnyPublisher<UIImage, ImageHandlerError>
 }
 
-/// Wrapper over Kingfisher
+/// Currently a wrapper over the few things we need Kingfisher for
 class ImageHandler: ImageHandlerType {
 
-  
+  /// Delete an image for the URL given
   func deleteImage(_ url: URL) -> AnyPublisher<Void, Never> {
     return Future <Void, Never>(){ promise in
       KingfisherManager.shared.cache.removeImage(forKey: url.absoluteString){
@@ -47,6 +51,7 @@ class ImageHandler: ImageHandlerType {
     .eraseToAnyPublisher()
   }
 
+  /// fetches and image or returns an error
   func image(_ url: URL) -> AnyPublisher<UIImage, ImageHandlerError> {
     let resource = ImageResource(downloadURL: url)
 

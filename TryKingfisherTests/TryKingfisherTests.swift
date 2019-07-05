@@ -62,7 +62,7 @@ class TryKingfisherTests: XCTestCase {
     let expect = self.expectation(description: "Finished Test")
     
     //When
-    Just<Void>(())
+    _ = Just<Void>(())
       .delay(for: 1, scheduler: RunLoop.current)
       .map{ [weak sut] _ in sut?.onAppear() }
       .delay(for: 1, scheduler: RunLoop.current)

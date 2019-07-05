@@ -26,8 +26,6 @@ struct ContentView : View {
         self.ds.onAppear()
       }
     }
-  
-  
 }
 
 #if DEBUG
