@@ -18,7 +18,6 @@ struct ContentView : View {
         Text(ds.viewModel.name)
         Image(uiImage: ds.viewModel.image ?? UIImage())
         Button("Click Me") {
-          print("Clicked")
           self.ds.buttonPressed()
         }
       }

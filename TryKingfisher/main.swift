@@ -10,9 +10,8 @@ import Foundation
 
 import UIKit
 
-let appDelegateClass: AnyClass =
-  NSClassFromString("TestingAppDelegate") ?? AppDelegate.self
-
+let appDelegateClass: AnyClass = NSClassFromString("TestingAppDelegate") ?? AppDelegate.self
+print(CommandLine.arguments)
 UIApplicationMain(
   CommandLine.argc,
   CommandLine.unsafeArgv,

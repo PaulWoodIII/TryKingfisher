@@ -37,13 +37,49 @@ protocol ImageHandlerType {
   func image(_ url: URL) -> AnyPublisher<UIImage, ImageHandlerError>
 }
 
+protocol ImageCacheType {
+  func removeImage(forKey key: String, completionHandler: (() -> Void)?)
+}
+
+// Humble extension of the ImageCache
+extension Kingfisher.ImageCache: ImageCacheType {
+  func removeImage(forKey key: String, completionHandler: (() -> Void)?) {
+    self.removeImage(forKey: key, processorIdentifier: "", fromMemory: true, fromDisk: true, callbackQueue: .untouch, completionHandler: completionHandler)
+  }
+}
+
+protocol KingfisherManagerType {
+  var imageCache: ImageCacheType { get set }
+  func retrieveImage(with resource: Resource, options: KingfisherOptionsInfo?, completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)?) -> DownloadTask?
+}
+
+extension KingfisherManager: KingfisherManagerType {
+  
+  var imageCache: ImageCacheType {
+    get {
+      return self.cache
+    }
+    set {
+      self.cache = newValue as! ImageCache
+    }
+  }
+  
+  func retrieveImage(with resource: Resource, options: KingfisherOptionsInfo?, completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)?) -> DownloadTask? {
+    return self.retrieveImage(with: resource, options: options, progressBlock: nil, completionHandler: completionHandler)
+  }
+  
+}
+
 /// Currently a wrapper over the few things we need Kingfisher for
 class ImageHandler: ImageHandlerType {
+  
+  /// expose the kingfisher manager to be injected
+  var kingfisherManager: KingfisherManagerType = KingfisherManager.shared
 
   /// Delete an image for the URL given
   func deleteImage(_ url: URL) -> AnyPublisher<Void, Never> {
     return Future <Void, Never>(){ promise in
-      KingfisherManager.shared.cache.removeImage(forKey: url.absoluteString){
+      self.kingfisherManager.imageCache.removeImage(forKey: url.absoluteString){
         promise(.success(()))
       }
     }
@@ -58,7 +94,7 @@ class ImageHandler: ImageHandlerType {
     return Future<UIImage, ImageHandlerError>{
       promise in
       let opts = KingfisherOptionsInfo([.forceRefresh, .waitForCache])
-      KingfisherManager.shared.retrieveImage(with: resource, options:opts) { result in
+      self.kingfisherManager.retrieveImage(with: resource, options:opts) { result in
         switch result {
         case .success(let result):
           promise( .success(result.image))

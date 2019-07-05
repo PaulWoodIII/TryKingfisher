@@ -47,7 +47,7 @@ class TryKingfisherTests: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
   
-  func testExample() {
+  func testSetupAndClick() {
     //Given
     let imageHandler = MockImageHandler(stubDeleteImage: { (url: URL) -> AnyPublisher<Void, Never> in
       return Just<Void>(()).eraseToAnyPublisher()
