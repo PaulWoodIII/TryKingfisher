@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		3C3E3FF022CFA6B900211B61 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3E3FEF22CFA6B900211B61 /* main.swift */; };
 		3C3E3FF622CFA94700211B61 /* TestingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3E3FF122CFA6EE00211B61 /* TestingAppDelegate.swift */; };
-		3C3E3FF822CFDBFD00211B61 /* ImageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3E3FF722CFDBFD00211B61 /* ImageHandlerTests.swift */; };
 		3C4CDDED22CEB811007C9898 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4CDDEC22CEB811007C9898 /* AppDelegate.swift */; };
 		3C4CDDEF22CEB811007C9898 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4CDDEE22CEB811007C9898 /* SceneDelegate.swift */; };
 		3C4CDDF122CEB811007C9898 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4CDDF022CEB811007C9898 /* ContentView.swift */; };
@@ -36,7 +35,6 @@
 /* Begin PBXFileReference section */
 		3C3E3FEF22CFA6B900211B61 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		3C3E3FF122CFA6EE00211B61 /* TestingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingAppDelegate.swift; sourceTree = "<group>"; };
-		3C3E3FF722CFDBFD00211B61 /* ImageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHandlerTests.swift; sourceTree = "<group>"; };
 		3C4CDDE922CEB811007C9898 /* TryKingfisher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TryKingfisher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4CDDEC22CEB811007C9898 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3C4CDDEE22CEB811007C9898 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -120,7 +118,6 @@
 			isa = PBXGroup;
 			children = (
 				3C4CDE0322CEB811007C9898 /* TryKingfisherTests.swift */,
-				3C3E3FF722CFDBFD00211B61 /* ImageHandlerTests.swift */,
 				3C3E3FF122CFA6EE00211B61 /* TestingAppDelegate.swift */,
 				3C4CDE0522CEB811007C9898 /* Info.plist */,
 			);
@@ -248,7 +245,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C3E3FF822CFDBFD00211B61 /* ImageHandlerTests.swift in Sources */,
 				3C4CDE0422CEB811007C9898 /* TryKingfisherTests.swift in Sources */,
 				3C3E3FF622CFA94700211B61 /* TestingAppDelegate.swift in Sources */,
 			);
