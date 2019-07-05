@@ -107,7 +107,7 @@ class BeardDataSource: BindableObject {
   
   /// Helper method to get a new Name
   private func newName() -> String {
-    viewModel.name = names.randomElement()!
+    return names.randomElement()!
   }
 }
 

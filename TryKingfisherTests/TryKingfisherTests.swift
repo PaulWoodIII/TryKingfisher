@@ -34,7 +34,7 @@ class MockImageHandler: ImageHandlerType {
 
 class TryKingfisherTests: XCTestCase {
   
-  var sut: BeardDataSource!
+  var sut: BeardDataSource?
   let testImage = Assets.Images.beardPlaceHolder.uiImage
   
   override func setUp() {
@@ -54,22 +54,21 @@ class TryKingfisherTests: XCTestCase {
     }) { (url: URL) -> AnyPublisher<UIImage, ImageHandlerError> in
       return Just(self.testImage).setFailureType(to: ImageHandlerError.self).eraseToAnyPublisher()
     }
-    sut = BeardDataSource()
-    sut.imageHandler = imageHandler
+    sut?.imageHandler = imageHandler
     var spiedChangeEvents = PassthroughSubject<Void,Never>()
     var spiedDidChangeCount = 0
     let spiedDidChange = spiedChangeEvents.sink { _ in
       spiedDidChangeCount += 1
     }
-    _ = sut.didChange.subscribe(spiedChangeEvents)
+    _ = sut?.didChange.subscribe(spiedChangeEvents)
     let expect = self.expectation(description: "Finished Test")
     
     //When
     Just<Void>(())
       .delay(for: 1, scheduler: RunLoop.current)
-      .map{ _ in self.sut.onAppear() }
+      .map{ [weak sut] _ in sut?.onAppear() }
       .delay(for: 1, scheduler: RunLoop.current)
-      .map { _ in self.sut.buttonPressed() }
+      .map { [weak sut] _ in sut?.buttonPressed() }
       .sink { _ in
       expect.fulfill()
     }
