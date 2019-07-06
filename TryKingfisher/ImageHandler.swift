@@ -37,22 +37,26 @@ protocol ImageHandlerType {
   func image(_ url: URL) -> AnyPublisher<UIImage, ImageHandlerError>
 }
 
+/// A Poor attempt to abstract the ImageCache into a protocol for injection
 protocol ImageCacheType {
   func removeImage(forKey key: String, completionHandler: (() -> Void)?)
 }
 
-// Humble extension of the ImageCache
+/// Humble extension of the ImageCache
 extension Kingfisher.ImageCache: ImageCacheType {
   func removeImage(forKey key: String, completionHandler: (() -> Void)?) {
     self.removeImage(forKey: key, processorIdentifier: "", fromMemory: true, fromDisk: true, callbackQueue: .untouch, completionHandler: completionHandler)
   }
 }
 
+/// A Poor attempt to abstract the KingfisherManager into a protocol for injection
 protocol KingfisherManagerType {
   var imageCache: ImageCacheType { get set }
-  func retrieveImage(with resource: Resource, options: KingfisherOptionsInfo?, completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)?) -> DownloadTask?
+  func retrieveImage(with resource: Resource,
+                     completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)?)
 }
 
+/// Humble extension of the KingfisherManager conform the protocol for injection
 extension KingfisherManager: KingfisherManagerType {
   
   var imageCache: ImageCacheType {
@@ -64,8 +68,9 @@ extension KingfisherManager: KingfisherManagerType {
     }
   }
   
-  func retrieveImage(with resource: Resource, options: KingfisherOptionsInfo?, completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)?) -> DownloadTask? {
-    return self.retrieveImage(with: resource, options: options, progressBlock: nil, completionHandler: completionHandler)
+  func retrieveImage(with resource: Resource,
+                     completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)?) {
+    _ = self.retrieveImage(with: resource, progressBlock: nil, completionHandler: completionHandler)
   }
   
 }
@@ -93,8 +98,7 @@ class ImageHandler: ImageHandlerType {
 
     return Future<UIImage, ImageHandlerError>{
       promise in
-      let opts = KingfisherOptionsInfo([.forceRefresh, .waitForCache])
-      self.kingfisherManager.retrieveImage(with: resource, options:opts) { result in
+      self.kingfisherManager.retrieveImage(with: resource) { result in
         switch result {
         case .success(let result):
           promise( .success(result.image))
