@@ -20,6 +20,8 @@
 		3C4CDE1722CECD6E007C9898 /* ImageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4CDE1622CECD6E007C9898 /* ImageHandler.swift */; };
 		3C4CDE1922CF7912007C9898 /* BeardDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4CDE1822CF7912007C9898 /* BeardDataSource.swift */; };
 		3C4CDE1B22CFA343007C9898 /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4CDE1A22CFA343007C9898 /* Assets.swift */; };
+		3CAD792922D1348B00DCC4A0 /* EntwineTest in Frameworks */ = {isa = PBXBuildFile; productRef = 3CAD792822D1348B00DCC4A0 /* EntwineTest */; };
+		3CAD792B22D1348B00DCC4A0 /* Entwine in Frameworks */ = {isa = PBXBuildFile; productRef = 3CAD792A22D1348B00DCC4A0 /* Entwine */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +66,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CAD792922D1348B00DCC4A0 /* EntwineTest in Frameworks */,
+				3CAD792B22D1348B00DCC4A0 /* Entwine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,6 +165,10 @@
 				3C4CDE0122CEB811007C9898 /* PBXTargetDependency */,
 			);
 			name = TryKingfisherTests;
+			packageProductDependencies = (
+				3CAD792822D1348B00DCC4A0 /* EntwineTest */,
+				3CAD792A22D1348B00DCC4A0 /* Entwine */,
+			);
 			productName = TryKingfisherTests;
 			productReference = 3C4CDDFF22CEB811007C9898 /* TryKingfisherTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -195,6 +203,7 @@
 			mainGroup = 3C4CDDE022CEB811007C9898;
 			packageReferences = (
 				3C4CDE1322CECD16007C9898 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				3CAD792722D1348B00DCC4A0 /* XCRemoteSwiftPackageReference "Entwine" */,
 			);
 			productRefGroup = 3C4CDDEA22CEB811007C9898 /* Products */;
 			projectDirPath = "";
@@ -509,6 +518,14 @@
 				kind = branch;
 			};
 		};
+		3CAD792722D1348B00DCC4A0 /* XCRemoteSwiftPackageReference "Entwine" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tcldr/Entwine";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -516,6 +533,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3C4CDE1322CECD16007C9898 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		3CAD792822D1348B00DCC4A0 /* EntwineTest */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3CAD792722D1348B00DCC4A0 /* XCRemoteSwiftPackageReference "Entwine" */;
+			productName = EntwineTest;
+		};
+		3CAD792A22D1348B00DCC4A0 /* Entwine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3CAD792722D1348B00DCC4A0 /* XCRemoteSwiftPackageReference "Entwine" */;
+			productName = Entwine;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
